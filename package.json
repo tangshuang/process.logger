@@ -1,0 +1,27 @@
+{
+  "name": "process.logger",
+  "version": "1.0.1",
+  "description": "",
+  "main": "dist/process.logger.js",
+  "scripts": {
+    "babel": "babel src/process.logger.js -o dist/process.logger.js"
+  },
+  "keywords": [
+  ],
+  "author": "tangshuang",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tangshuang/process.logger.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tangshuang/process.logger/issues"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.1.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-latest": "^6.16.0"
+  }
+}
