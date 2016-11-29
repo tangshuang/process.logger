@@ -12,6 +12,7 @@ colors.setTheme({
 })
 
 function padLeft(str, len = 2) {
+	str = str.toString()
 	if(str.length >= len) {
 		return str
 	}
@@ -33,61 +34,70 @@ function timestampStr(text) {
 
 class Logger {
 	constructor() {
-		this.cololr = undefined
-		this.style = undefined
-		this.background = undefined
-		this.timestamp = undefined
+		this._color = undefined
+		this._style = undefined
+		this._background = undefined
+		this._timestamp = undefined
 		return this.log.bind(this)
 	}
-	time(msg) {
-		this.timestamp = timestampStr("")
+	set(key, value) {
+		if(key === "background" && value.indexOf("bg") !== 0) {
+			value = "bg" + value.substr(0,1).toUpperCase() + value.substr(1)
+		}
+		this["_" + key] = value
+		return this
+	}
+	get(key) {
+		return this["_" + key]
+	}
+	timestamp(msg) {
+		this._timestamp = timestampStr("")
 		this.log(msg)
 		return this
 	}
 	done(msg) {
-		this.color = "green"
+		this._color = "green"
 		this.log(msg)
 		return this
 	}
 	success(msg) {
-		this.color = "green"
+		this._color = "green"
 		this.log(msg)
 		return this
 	}
 	ok(msg) {
-		this.color = "green"
+		this._color = "green"
 		this.log(msg)
 		return this
 	}
 	help(msg) {
-		this.color = "cyan"
+		this._color = "cyan"
 		this.log(msg)
 		return this
 	}
 	warn(msg) {
-		this.color = "yellow"
+		this._color = "yellow"
 		this.log(msg)
 		return this
 	}
 	debug(msg) {
-		this.color = "blue"
+		this._color = "blue"
 		this.log(msg)
 		return this
 	}
 	error(msg) {
-		this.color = "red"
+		this._color = "red"
 		this.log(msg)
 		return this
 	}
 	welldone(msg) {
-		this.color = "rainbow"
+		this._color = "rainbow"
 		this.log(msg)
 		return this
 	}
 	log(msg, ...args) {
 		// with out msg
 		if(!msg) {
-			this.destory()
 			return this
 		}
 
@@ -98,9 +108,9 @@ class Logger {
 			args.forEach(arg => {
 				if(arg.text) {
 					let msg = arg.text
-					let color = arg.color || color
-					let style = arg.style || style
-					let background = arg.background || background
+					let color = arg._color || color
+					let style = arg._style || style
+					let background = arg._background || background
 					let pipe = colors
 
 					pipe = color && colors[color] ? pipe[color] : pipe
@@ -121,10 +131,10 @@ class Logger {
 			return this
 		}
 
-		var color = this.color
-		var style = this.style
-		var background = this.background
-		var timestamp = this.timestamp
+		var color = this._color
+		var style = this._style
+		var background = this._background
+		var timestamp = this._timestamp
 		var pipe = colors
 
 		pipe = color && colors[color] ? pipe[color] : pipe
@@ -152,10 +162,10 @@ class Logger {
 		return this
 	}
 	destory() {
-		this.color = undefined
-		this.style = undefined
-		this.background = undefined
-		this.timestamp = undefined
+		this._color = undefined
+		this._style = undefined
+		this._background = undefined
+		this._timestamp = undefined
 	}
 }
 

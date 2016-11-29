@@ -9,7 +9,9 @@ github: https://github.com/tangshuang/process.logger
 npm install process.logger
 ```
 
-## color
+## Styles
+
+#### color
 
 * black
 * nred
@@ -21,8 +23,13 @@ npm install process.logger
 * white
 * gray
 * grey
+* rainbow
+* zebra
+* america
+* trap
+* random
 
-## style
+#### style
 
 * reset
 * bold
@@ -33,7 +40,7 @@ npm install process.logger
 * hidden
 * strikethrough
 
-## background
+#### background
 
 * bgBlack
 * bgRed
@@ -44,15 +51,9 @@ npm install process.logger
 * bgCyan
 * bgWhite
 
-## extras
+**Notice:* these words begin with "bg"
 
-* rainbow
-* zebra
-* america
-* trap
-* random
-
------------
+#### alias
 
 * ok -> green
 * success -> green
@@ -80,6 +81,8 @@ var logger = require('process.logger');
 logger('This is a message.','green','bold');
 ```
 
+Only one color, style, background will be set
+
 2) object arguments
 
 ```
@@ -94,6 +97,7 @@ object: {
 	background: ''
 }
 ```
+
 Each of `text, color, background` is not required.
 
 For example:
@@ -105,13 +109,33 @@ logger({
 	color:'red'
 },{
 	text:'This half is green.',
-	color:'green'
+	background:'green'
 });
 ```
 
 ## API
 
-* logger().done(msg), logger.success(msg), logger.ok(msg)
+**Notice:** use `logger().` not `logger.`!
+
+#### log()
+
+```
+logger().log(msg...)
+```
+
+In fact, `logger()` constructor returns `log()`, so they have same usage. Why has `log()`, you can use like:
+
+```
+logger().set("color", "red").set("style", "bold").log(...)
+```
+
+Then you can use `set()` easily.
+
+#### alias
+
+* logger().done(msg)
+* logger().success(msg)
+* logger().ok(msg)
 * logger().error(msg)
 * logger().warn(msg)
 * logger().help(msg)
@@ -120,13 +144,34 @@ logger({
 
 In fact, api is based on basic function. And all of them can be rewritten.
 
-**Notice:** use `logger().` not `logger.`!
-
 For example:
 
 ```
-logger.done('Oh! My god!');
-logger.welldone('This is so bueatiful.');
+logger().done('Oh! My god!');
+logger().welldone('This is so bueatiful.');
+```
+
+#### get(), set()
+
+**set(key, value)**
+
+```
+logger().set("color", "red")
+```
+
+When you set background without beginning with "bg", e.g. `set("background", "green")`
+
+**get(key)**
+
+```
+var time = logger().timestamp().get("timestamp")
+```
+
+#### timestamp()
+
+```
+logger().timestamp("There will be a timestamp before this msg")
+logger().timestamp().done("The same!")
 ```
 
 ## Development

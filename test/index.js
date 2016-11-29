@@ -7,9 +7,9 @@ logger("Dont touch me!", "rainbow")
 logger().error("Dont be like this!")
 logger().done("Just do it!")
 logger().warn("You need help!")
-logger().done().error("There is only one color.")
+logger().done().set("background", "white").error("There is only one color.")
 
-logger().time("You should do it right now!")
+logger().timestamp("You should do it right now!")
 
 logger({
 	style: "help",
