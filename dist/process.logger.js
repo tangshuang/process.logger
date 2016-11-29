@@ -32,6 +32,7 @@ _safe2.default.setTheme({
 function padLeft(str) {
 	var len = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
 
+	str = str.toString();
 	if (str.length >= len) {
 		return str;
 	} else {
@@ -54,73 +55,87 @@ var Logger = function () {
 	function Logger() {
 		_classCallCheck(this, Logger);
 
-		this.cololr = undefined;
-		this.style = undefined;
-		this.background = undefined;
-		this.timestamp = undefined;
+		this._color = undefined;
+		this._style = undefined;
+		this._background = undefined;
+		this._timestamp = undefined;
 		return this.log.bind(this);
 	}
 
 	_createClass(Logger, [{
-		key: 'time',
-		value: function time(msg) {
-			this.timestamp = timestampStr("");
+		key: 'set',
+		value: function set(key, value) {
+			if (key === "background" && value.indexOf("bg") !== 0) {
+				value = "bg" + value.substr(0, 1).toUpperCase() + value.substr(1);
+			}
+			this["_" + key] = value;
+			return this;
+		}
+	}, {
+		key: 'get',
+		value: function get(key) {
+			return this["_" + key];
+		}
+	}, {
+		key: 'timestamp',
+		value: function timestamp(msg) {
+			this._timestamp = timestampStr("");
 			this.log(msg);
 			return this;
 		}
 	}, {
 		key: 'done',
 		value: function done(msg) {
-			this.color = "green";
+			this._color = "green";
 			this.log(msg);
 			return this;
 		}
 	}, {
 		key: 'success',
 		value: function success(msg) {
-			this.color = "green";
+			this._color = "green";
 			this.log(msg);
 			return this;
 		}
 	}, {
 		key: 'ok',
 		value: function ok(msg) {
-			this.color = "green";
+			this._color = "green";
 			this.log(msg);
 			return this;
 		}
 	}, {
 		key: 'help',
 		value: function help(msg) {
-			this.color = "cyan";
+			this._color = "cyan";
 			this.log(msg);
 			return this;
 		}
 	}, {
 		key: 'warn',
 		value: function warn(msg) {
-			this.color = "yellow";
+			this._color = "yellow";
 			this.log(msg);
 			return this;
 		}
 	}, {
 		key: 'debug',
 		value: function debug(msg) {
-			this.color = "blue";
+			this._color = "blue";
 			this.log(msg);
 			return this;
 		}
 	}, {
 		key: 'error',
 		value: function error(msg) {
-			this.color = "red";
+			this._color = "red";
 			this.log(msg);
 			return this;
 		}
 	}, {
 		key: 'welldone',
 		value: function welldone(msg) {
-			this.color = "rainbow";
+			this._color = "rainbow";
 			this.log(msg);
 			return this;
 		}
@@ -133,7 +148,6 @@ var Logger = function () {
 
 			// with out msg
 			if (!msg) {
-				this.destory();
 				return this;
 			}
 
@@ -144,9 +158,9 @@ var Logger = function () {
 				args.forEach(function (arg) {
 					if (arg.text) {
 						var _msg = arg.text;
-						var _color = arg.color || _color;
-						var _style = arg.style || _style;
-						var _background = arg.background || _background;
+						var _color = arg._color || _color;
+						var _style = arg._style || _style;
+						var _background = arg._background || _background;
 						var _pipe = _safe2.default;
 
 						_pipe = _color && _safe2.default[_color] ? _pipe[_color] : _pipe;
@@ -167,10 +181,10 @@ var Logger = function () {
 				return this;
 			}
 
-			var color = this.color;
-			var style = this.style;
-			var background = this.background;
-			var timestamp = this.timestamp;
+			var color = this._color;
+			var style = this._style;
+			var background = this._background;
+			var timestamp = this._timestamp;
 			var pipe = _safe2.default;
 
 			pipe = color && _safe2.default[color] ? pipe[color] : pipe;
@@ -200,10 +214,10 @@ var Logger = function () {
 	}, {
 		key: 'destory',
 		value: function destory() {
-			this.color = undefined;
-			this.style = undefined;
-			this.background = undefined;
-			this.timestamp = undefined;
+			this._color = undefined;
+			this._style = undefined;
+			this._background = undefined;
+			this._timestamp = undefined;
 		}
 	}]);
 

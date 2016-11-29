@@ -51,7 +51,7 @@ npm install process.logger
 * bgCyan
 * bgWhite
 
-**Notice:* these words begin with "bg"
+**Notice:** these words begin with "bg"
 
 #### alias
 
@@ -66,7 +66,7 @@ npm install process.logger
 
 ## Usage
 
-1) string arguments
+1 string arguments
 
 ```
 logger(msg[,color,style,backgound])
@@ -83,7 +83,7 @@ logger('This is a message.','green','bold');
 
 Only one color, style, background will be set
 
-2) object arguments
+2 object arguments
 
 ```
 logger(object[,object,...])

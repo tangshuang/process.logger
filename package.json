@@ -1,6 +1,6 @@
 {
   "name": "process.logger",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "dist/process.logger.js",
   "scripts": {
