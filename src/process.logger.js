@@ -1,15 +1,18 @@
-import colors from 'colors/safe'
+import colors from "colors/safe"
 
-colors.setTheme({
-	ok: 'green',
-	success: 'green',
-	done: 'green',
-	welldone: 'rainbow',
-	help: 'cyan',
-	warn: 'yellow',
-	debug: 'blue',
-	error: 'red',
-})
+const themes = {
+	ok: "green",
+	success: "green",
+	done: "green",
+	welldone: "rainbow",
+	help: "cyan",
+	warn: "yellow",
+	debug: "blue",
+	error: "red",
+	log: "default",
+}
+
+colors.setTheme(themes)
 
 function padLeft(str, len = 2) {
 	str = str.toString()
@@ -32,143 +35,112 @@ function timestampStr(text) {
 	return `[${year}-${month}-${day} ${hour}:${minute}:${second}] ${text}`
 }
 
-class Logger {
-	constructor() {
-		this._color = undefined
-		this._style = undefined
-		this._background = undefined
-		this._timestamp = undefined
-		return this.log.bind(this)
-	}
-	set(key, value) {
-		if(key === "background" && value.indexOf("bg") !== 0) {
-			value = "bg" + value.substr(0,1).toUpperCase() + value.substr(1)
-		}
-		this["_" + key] = value
-		return this
-	}
-	get(key) {
-		return this["_" + key]
-	}
-	timestamp(msg) {
-		this._timestamp = timestampStr("")
-		this.log(msg)
-		return this
-	}
-	done(msg) {
-		this._color = "green"
-		this.log(msg)
-		return this
-	}
-	success(msg) {
-		this._color = "green"
-		this.log(msg)
-		return this
-	}
-	ok(msg) {
-		this._color = "green"
-		this.log(msg)
-		return this
-	}
-	help(msg) {
-		this._color = "cyan"
-		this.log(msg)
-		return this
-	}
-	warn(msg) {
-		this._color = "yellow"
-		this.log(msg)
-		return this
-	}
-	debug(msg) {
-		this._color = "blue"
-		this.log(msg)
-		return this
-	}
-	error(msg) {
-		this._color = "red"
-		this.log(msg)
-		return this
-	}
-	welldone(msg) {
-		this._color = "rainbow"
-		this.log(msg)
-		return this
-	}
-	log(msg, ...args) {
-		// with out msg
-		if(!msg) {
-			return this
-		}
-
-		// list of object
-		if(typeof msg === 'object') {
-			var msgs = []
-			args = [msg, ...args]
-			args.forEach(arg => {
-				if(arg.text) {
-					let msg = arg.text
-					let color = arg._color || color
-					let style = arg._style || style
-					let background = arg._background || background
-					let pipe = colors
-
-					pipe = color && colors[color] ? pipe[color] : pipe
-					pipe = style && colors[style] ? pipe[style] : pipe
-					pipe = background && colors[background] ? pipe[background] : pipe
-
-					msg = typeof pipe === "function" ? pipe(msg) : msg
-					msgs.push(msg)
-				}
-			})
-			
-			if(msgs.length > 0) {
-				msg = msgs.join(" ")
-				msg = timestamp ? timestampStr(msg) : msg
-				console.log(msg)
-			}
-			this.destory()
-			return this
-		}
-
-		var color = this._color
-		var style = this._style
-		var background = this._background
-		var timestamp = this._timestamp
-		var pipe = colors
+function message(messages) {
+	messages.filter(msg => msg.text).map(msg => {
+		let text = msg.text
+		let color = msg.color
+		let style = msg.style
+		let background = msg.background
+		let pipe = colors
 
 		pipe = color && colors[color] ? pipe[color] : pipe
 		pipe = style && colors[style] ? pipe[style] : pipe
 		pipe = background && colors[background] ? pipe[background] : pipe
 
-		msg = timestamp ? timestampStr(msg) : msg
-
-		// only msg, without options
-		if(args.length === 0) {
-			msg = typeof pipe === "function" ? pipe(msg) : msg
-			console.log(msg)
-			this.destory()
-			return this
-		}
-
-		// with options
-		args.forEach(arg => {
-			pipe = colors[arg] ? pipe[arg] : pipe
-		})
-
 		msg = typeof pipe === "function" ? pipe(msg) : msg
-		console.log(msg)
-		this.destory()
-		return this
+		return msg
+	})
+	return messages.join(" ")
+}
+
+var _attributions = {
+	color: undefined,
+	style: undefined,
+	background: undefined,
+	timestamp: undefined,
+}
+var _messages = []
+
+function Logger(msg, ...args) {
+	if(!msg) {
+		return
 	}
-	destory() {
-		this._color = undefined
-		this._style = undefined
-		this._background = undefined
-		this._timestamp = undefined
+
+	Logger.reset()
+
+	args = [msg, ...args]
+	args.forEach(arg => {
+		Logger.put(arg)
+	})
+
+	Logger.print()
+}
+
+Logger.set = function(key, value) {
+	_attributions[key] = value
+	return Logger
+}
+
+Logger.get = function(key) {
+	return key !== 0 && !key ? _attributions : _attributions[key]
+}
+
+Logger.reset = function() {
+	_attributions = {
+		color: undefined,
+		style: undefined,
+		background: undefined,
+		timestamp: undefined,
+	}
+	_messages = []
+
+	return Logger
+}
+
+Logger.put = function(msg, options) {
+	// msg object list
+	if(typeof msg === "object" && msg.text) {
+		_messages.push(msg)
+	}
+	// only one option
+	else if(typeof options === "string") {
+		_messages.push({
+			text: msg,
+			color: options
+		})
+	}
+	// normal
+	else {
+		_messages.push({
+			text: msg,
+			color: options.color || Logger.get("color"),
+			style: options.style || Logger.get("style"),
+			background: options.background || Logger.get("background"),
+		})
+	}
+	
+	return Logger
+}
+
+Logger.print = function() {
+	var msg = message(_messages);
+	var timestamp = Logger.get("timestamp")
+
+	msg = timestamp ? timestampStr(msg) : msg
+	console.log(msg)
+
+	Logger.reset()
+}
+
+// Logger.set("color", "red").put("You").put("are", {color: "grey"}).put("gay!").print()
+
+for(prop in themes) {
+	let theme = themes[prop]
+	Logger[prop] = function(msg, options) {
+		options.color = theme
+		Logger.reset().put(msg, options).print()
 	}
 }
 
-var logger = new Logger()
-export default logger
-module.exports = logger
+export default Logger
+module.exports = Logger
