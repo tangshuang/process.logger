@@ -22,28 +22,24 @@ logger({
 })
 
 // use set, put, print
-logger.set("color", "red").set("style", "bold").set("background", "yellow")
-logger("Test a word!") // use settingss
-logger.put("This", {color: "green"}).put("is", {style: "default"}).put("cool!").print() // cover settings
+logger.set("color", "red").set("style", "bold").set("background", "yellow").put("This", {color: "green"}).put("is", {style: "default"}).put("cool!").print()
 
-logger.reset().set("color", "red").set("style", "bold").set("background", "white").put("You are so smart!").print().reset()
-logger.reset().set("tiemstamp", true).put("You", {
+logger.set("color", "red").set("style", "bold").set("background", "white").put("You are so smart!").print()
+logger.set("tiemstamp", true).put("You", {
 	color: "red"
 }).put({
 	text: "are",
 	color: "blue"
-}).put("cute!").print().reset()
+}).put("cute!").print()
+logger.set("style", "bold").log("Look at this!", "blue")
 
 // use alias
 logger.success("OK!")
-logger.log("Look at this!", "blue")
 logger.warn("go! go!", {
-	background: "yellow"
+	background: "white"
 })
 logger.error({
 	text: "You get an error!",
 	style: "bold"
 })
 logger.set("tiemstamp", true).help("You get it!")
-
-

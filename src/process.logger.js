@@ -160,6 +160,12 @@ const themes = {
 for(let prop in themes) {
 	let theme = themes[prop]
 	Logger[prop] = function(msg, options = {}) {
+		if(typeof msg === "object") {
+			msg.color = theme
+			Logger.reset().log(msg, options)
+			return
+		}
+		
 		if(typeof options !== "object") {
 			options = {}
 		}
