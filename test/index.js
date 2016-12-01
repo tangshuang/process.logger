@@ -1,19 +1,49 @@
 import logger from "../src/process.logger"
 
+// use like console.log
 logger("I am a pig!")
-logger("You are so smart!", "red", "bold")
-logger("Dont touch me!", "rainbow")
+logger("Dont", "touch", "me!")
 
-logger().error("Dont be like this!")
-logger().done("Just do it!")
-logger().warn("You need help!")
-logger().done().set("background", "white").error("There is only one color.")
-
-logger().timestamp("You should do it right now!")
-
+// use object list
 logger({
-	style: "help",
-	text: "Help!",
-}, {
-	text: "Look at my feet!",
+	text: "You are so smart!",
+	color: "red",
+	style: "bold",
 })
+logger({
+	text: "You",
+	color: "blue",
+}, {
+	text: "are",
+}, {
+	text: "bitch",
+	color: "black",
+	background: "white",
+})
+
+// use set, put, print
+logger.set("color", "red").set("style", "bold").set("background", "yellow")
+logger("Test a word!") // use settingss
+logger.put("This", {color: "green"}).put("is", {style: "default"}).put("cool!").print() // cover settings
+
+logger.reset().set("color", "red").set("style", "bold").set("background", "white").put("You are so smart!").print().reset()
+logger.reset().set("tiemstamp", true).put("You", {
+	color: "red"
+}).put({
+	text: "are",
+	color: "blue"
+}).put("cute!").print().reset()
+
+// use alias
+logger.success("OK!")
+logger.log("Look at this!", "blue")
+logger.warn("go! go!", {
+	background: "yellow"
+})
+logger.error({
+	text: "You get an error!",
+	style: "bold"
+})
+logger.set("tiemstamp", true).help("You get it!")
+
+

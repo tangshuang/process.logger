@@ -1,19 +1,5 @@
 import colors from "colors/safe"
 
-const themes = {
-	ok: "green",
-	success: "green",
-	done: "green",
-	welldone: "rainbow",
-	help: "cyan",
-	warn: "yellow",
-	debug: "blue",
-	error: "red",
-	log: "default",
-}
-
-colors.setTheme(themes)
-
 function padLeft(str, len = 2) {
 	str = str.toString()
 	if(str.length >= len) {
@@ -24,7 +10,7 @@ function padLeft(str, len = 2) {
 	}
 }
 
-function timestampStr(text) {
+function getTimestamp() {
 	var date = new Date()
 	var year = date.getFullYear()
 	var month = padLeft(date.getMonth() + 1)
@@ -32,26 +18,36 @@ function timestampStr(text) {
 	var hour = padLeft(date.getHours())
 	var minute = padLeft(date.getMinutes())
 	var second = padLeft(date.getSeconds())
-	return `[${year}-${month}-${day} ${hour}:${minute}:${second}] ${text}`
+	return `[${year}-${month}-${day} ${hour}:${minute}:${second}]`
 }
 
-function message(messages) {
-	messages.filter(msg => msg.text).map(msg => {
+// --------------------------------------------------------------------------
+
+function createMessage(messages) {
+	var msgs = [];
+	messages.filter(msg => msg.text).forEach(msg => {
 		let text = msg.text
 		let color = msg.color
 		let style = msg.style
 		let background = msg.background
 		let pipe = colors
 
+		if(background && background.indexOf("bg") !== 0) {
+			background = "bg" + background.substr(0,1).toUpperCase() + background.substr(1)
+		}
+
 		pipe = color && colors[color] ? pipe[color] : pipe
 		pipe = style && colors[style] ? pipe[style] : pipe
 		pipe = background && colors[background] ? pipe[background] : pipe
 
-		msg = typeof pipe === "function" ? pipe(msg) : msg
-		return msg
+		text = typeof pipe === "function" ? pipe(text) : text
+		msgs.push(text)
 	})
-	return messages.join(" ")
+
+	return msgs.join(" ")
 }
+
+// -----------------------------------------------------------------------------------------
 
 var _attributions = {
 	color: undefined,
@@ -85,19 +81,7 @@ Logger.get = function(key) {
 	return key !== 0 && !key ? _attributions : _attributions[key]
 }
 
-Logger.reset = function() {
-	_attributions = {
-		color: undefined,
-		style: undefined,
-		background: undefined,
-		timestamp: undefined,
-	}
-	_messages = []
-
-	return Logger
-}
-
-Logger.put = function(msg, options) {
+Logger.put = function(msg, options = {}) {
 	// msg object list
 	if(typeof msg === "object" && msg.text) {
 		_messages.push(msg)
@@ -122,25 +106,69 @@ Logger.put = function(msg, options) {
 	return Logger
 }
 
-Logger.print = function() {
-	var msg = message(_messages);
-	var timestamp = Logger.get("timestamp")
+Logger.reset = function() {
+	_attributions = {
+		color: undefined,
+		style: undefined,
+		background: undefined,
+		timestamp: undefined,
+	}
+	_messages = []
 
-	msg = timestamp ? timestampStr(msg) : msg
+	return Logger
+}
+
+Logger.print = function() {
+	var timestamp = Logger.get("timestamp")
+	if(timestamp) {
+		let stamp = getTimestamp();
+		if(typeof timestamp !== "object") {
+			timestamp = {}
+		}
+
+		_messages.unshift({
+			text: stamp,
+			color: timestamp.color,
+			style: timestamp.style,
+			background: timestamp.background
+		})
+	}
+
+	var msg = createMessage(_messages);
+
 	console.log(msg)
 
 	Logger.reset()
 }
 
-// Logger.set("color", "red").put("You").put("are", {color: "grey"}).put("gay!").print()
+Logger.log = function(msg, options) {
+	Logger.put(msg, options).print()
+}
 
-for(prop in themes) {
+// ------------------------------------------------------------------------
+
+const themes = {
+	ok: "green",
+	success: "green",
+	done: "green",
+	welldone: "rainbow",
+	help: "cyan",
+	warn: "yellow",
+	debug: "blue",
+	error: "red",
+}
+for(let prop in themes) {
 	let theme = themes[prop]
-	Logger[prop] = function(msg, options) {
+	Logger[prop] = function(msg, options = {}) {
+		if(typeof options !== "object") {
+			options = {}
+		}
 		options.color = theme
-		Logger.reset().put(msg, options).print()
+		Logger.reset().log(msg, options)
 	}
 }
+
+// -----------------------------------------------------
 
 export default Logger
 module.exports = Logger
