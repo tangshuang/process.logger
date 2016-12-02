@@ -209,10 +209,4 @@ However, you do not need to `reset` cache after you call this alias apis, becaus
 
 ## Development
 
-This package is written by ES6, run
-
-```
-npm run babel
-```
-
-to build source code.
+This package is written by ES6, use [componer](https://github.com/tangshuang/componer) to build source code.

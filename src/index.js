@@ -1,51 +1,5 @@
-import colors from "colors/safe"
-
-function padLeft(str, len = 2) {
-	str = str.toString()
-	if(str.length >= len) {
-		return str
-	}
-	else {
-		return padLeft("0" + str, len)
-	}
-}
-
-function getTimestamp() {
-	var date = new Date()
-	var year = date.getFullYear()
-	var month = padLeft(date.getMonth() + 1)
-	var day = padLeft(date.getDate())
-	var hour = padLeft(date.getHours())
-	var minute = padLeft(date.getMinutes())
-	var second = padLeft(date.getSeconds())
-	return `[${year}-${month}-${day} ${hour}:${minute}:${second}]`
-}
-
-// --------------------------------------------------------------------------
-
-function createMessage(messages) {
-	var msgs = [];
-	messages.filter(msg => msg.text).forEach(msg => {
-		let text = msg.text
-		let color = msg.color
-		let style = msg.style
-		let background = msg.background
-		let pipe = colors
-
-		if(background && background.indexOf("bg") !== 0) {
-			background = "bg" + background.substr(0,1).toUpperCase() + background.substr(1)
-		}
-
-		pipe = color && colors[color] ? pipe[color] : pipe
-		pipe = style && colors[style] ? pipe[style] : pipe
-		pipe = background && colors[background] ? pipe[background] : pipe
-
-		text = typeof pipe === "function" ? pipe(text) : text
-		msgs.push(text)
-	})
-
-	return msgs.join(" ")
-}
+import {createMsg} from "./utils/colorStr"
+import {getTime} from "./utils/getTime"
 
 // -----------------------------------------------------------------------------------------
 
@@ -121,7 +75,7 @@ Logger.reset = function() {
 Logger.print = function() {
 	var timestamp = Logger.get("timestamp")
 	if(timestamp) {
-		let stamp = getTimestamp();
+		let stamp = getTime();
 		if(typeof timestamp !== "object") {
 			timestamp = {}
 		}
@@ -134,7 +88,7 @@ Logger.print = function() {
 		})
 	}
 
-	var msg = createMessage(_messages);
+	var msg = createMsg(_messages);
 
 	console.log(msg)
 

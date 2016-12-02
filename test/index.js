@@ -1,4 +1,4 @@
-import logger from "../src/process.logger"
+import logger from "../dist/process.logger"
 
 // use like console.log
 logger("I am a pig!")
