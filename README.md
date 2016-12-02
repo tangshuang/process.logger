@@ -205,7 +205,7 @@ logger.debug("It is bold.", {
 logger.set("timestamp", true).success("Message is green, but timestamp is not.")
 ```
 
-However, you do not need to `reset` cache after you call this alias apis, because they call `log` inside.
+However, you do not need to `reset` cache after you call this alias apis, because they call `log` inside. And every time you call `log, print, done, warn...`, `reset` is called at the end, so you have to `set, put` again if you want to.
 
 ## Development
 

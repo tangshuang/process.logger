@@ -186,11 +186,17 @@ var _loop = function _loop(prop) {
 	Logger[prop] = function (msg) {
 		var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+		if ((typeof msg === "undefined" ? "undefined" : _typeof(msg)) === "object") {
+			msg.color = theme;
+			Logger.log(msg, options);
+			return;
+		}
+
 		if ((typeof options === "undefined" ? "undefined" : _typeof(options)) !== "object") {
 			options = {};
 		}
 		options.color = theme;
-		Logger.reset().log(msg, options);
+		Logger.log(msg, options);
 	};
 };
 

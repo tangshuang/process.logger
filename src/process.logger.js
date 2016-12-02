@@ -162,7 +162,7 @@ for(let prop in themes) {
 	Logger[prop] = function(msg, options = {}) {
 		if(typeof msg === "object") {
 			msg.color = theme
-			Logger.reset().log(msg, options)
+			Logger.log(msg, options)
 			return
 		}
 		
@@ -170,7 +170,7 @@ for(let prop in themes) {
 			options = {}
 		}
 		options.color = theme
-		Logger.reset().log(msg, options)
+		Logger.log(msg, options)
 	}
 }
 
