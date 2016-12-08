@@ -2,7 +2,7 @@
   "name": "process.logger",
   "version": "1.1.4",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/process.logger.js",
   "scripts": {
   },
   "keywords": [
