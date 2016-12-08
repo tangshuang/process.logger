@@ -1,6 +1,6 @@
 import colors from "colors/safe"
 
-export function createMsg(messages) {
+export function colorStr(messages) {
 	var msgs = [];
 	messages.filter(msg => msg.text).forEach(msg => {
 		let text = msg.text

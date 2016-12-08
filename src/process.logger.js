@@ -1,4 +1,4 @@
-import {createMsg} from "./utils/colorStr"
+import {colorStr as createMsg} from "./utils/colorStr"
 import {getTime} from "./utils/getTime"
 
 // -----------------------------------------------------------------------------------------

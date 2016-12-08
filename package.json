@@ -20,7 +20,5 @@
     "colors": "^1.1.2"
   },
   "devDependencies": {
-    "babel-cli": "^6.18.0",
-    "babel-preset-latest": "^6.16.0"
   }
 }
